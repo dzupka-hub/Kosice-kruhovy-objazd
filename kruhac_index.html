@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kruhový objazd Kostolianska · úspora času</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700&family=Saira:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --asfalt:#131518; --asfalt-2:#1B1E23; --asfalt-3:#242830;
+    --ciara:#E8E4D8; --znacka:#0F5FB0; --znacka-tmava:#0B4A8A;
+    --text:#EDEFF2; --text-2:#9AA2AD;
+    --ok:#46C06A; --pomaly:#E8B33C; --kolona:#E5544D; --stare:#8A93A0;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--asfalt);color:var(--text);
+    font-family:'Saira',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1040px;margin:0 auto;padding:28px 20px 64px}
+
+  header{margin-bottom:26px}
+  .hlava-vrch{display:flex;align-items:flex-start;gap:18px}
+  .eyebrow{font-family:'Saira Condensed';font-weight:600;letter-spacing:.16em;
+    font-size:.72rem;color:var(--text-2);text-transform:uppercase;line-height:1.5;max-width:70%}
+  .hodiny{margin-left:auto;text-align:right;flex-shrink:0}
+  .hodiny b{font-family:'Saira Condensed';font-weight:700;font-size:1.7rem;line-height:1;
+    display:block;font-variant-numeric:tabular-nums}
+  .hodiny span{font-size:.78rem;color:var(--text-2);display:block;margin-top:2px}
+  h1{font-family:'Saira Condensed';font-weight:700;font-size:clamp(2.2rem,5.5vw,3.2rem);
+    line-height:1;text-transform:uppercase;margin:.2rem 0 .45rem}
+  .stav-riadok{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;
+    font-size:.9rem;color:var(--text-2)}
+  .pulz{display:inline-flex;align-items:center;gap:7px}
+  .pulz i{width:8px;height:8px;border-radius:50%;background:var(--ok)}
+  @media (prefers-reduced-motion:no-preference){
+    .pulz i{animation:pulz 2.4s ease-in-out infinite}
+    @keyframes pulz{0%,100%{opacity:1}50%{opacity:.35}}
+  }
+
+  /* ---- karty smerov ---- */
+  .karty{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin:22px 0 8px}
+  .karta{background:var(--asfalt-2);border:1px solid var(--asfalt-3);border-radius:var(--radius);
+    padding:14px 16px 13px;display:flex;flex-direction:column;gap:7px}
+  .karta.hlavna{background:linear-gradient(160deg,var(--znacka),var(--znacka-tmava));
+    border:2px solid rgba(255,255,255,.85)}
+  .k-nazov{font-family:'Saira Condensed';font-weight:700;text-transform:uppercase;
+    font-size:1rem;letter-spacing:.04em;line-height:1.15}
+  .k-cas{display:flex;align-items:baseline;gap:6px}
+  .k-cas b{font-family:'Saira Condensed';font-weight:700;font-size:2.5rem;line-height:.95;
+    font-variant-numeric:tabular-nums}
+  .k-cas span{font-size:.85rem;opacity:.8}
+  .k-porov{font-size:.85rem;display:flex;align-items:center;gap:6px}
+  .sipka{font-size:1rem}
+  .k-detail{font-size:.76rem;color:var(--text-2);border-top:1px dashed var(--asfalt-3);
+    padding-top:7px;margin-top:1px}
+  .karta.hlavna .k-detail{color:rgba(255,255,255,.8);border-color:rgba(255,255,255,.25)}
+
+  section{margin-top:36px}
+  .sekcia-hlava{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px 16px;margin-bottom:14px}
+  h2{font-family:'Saira Condensed';font-weight:600;text-transform:uppercase;
+    letter-spacing:.06em;font-size:1.2rem}
+  .podnadpis{font-size:.85rem;color:var(--text-2)}
+  select{font-family:'Saira',sans-serif;font-size:.85rem;color:var(--text);
+    background:var(--asfalt-2);border:1px solid var(--asfalt-3);border-radius:999px;
+    padding:6px 14px;margin-left:auto;cursor:pointer}
+  .panel{background:var(--asfalt-2);border:1px solid var(--asfalt-3);border-radius:var(--radius);
+    padding:18px 16px 12px;overflow:hidden}
+  .prazdne{color:var(--text-2);font-size:.9rem;padding:26px 8px;text-align:center}
+  svg text{font-family:'Saira',sans-serif}
+  .legenda{display:flex;flex-wrap:wrap;gap:14px;margin-top:10px;font-size:.8rem;color:var(--text-2)}
+  .legenda span{display:inline-flex;align-items:center;gap:6px}
+  .legenda i{width:16px;height:3px;border-radius:2px;display:inline-block}
+
+  table{width:100%;border-collapse:collapse;font-size:.9rem}
+  th,td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--asfalt-3)}
+  th{font-family:'Saira Condensed';font-weight:600;text-transform:uppercase;
+    letter-spacing:.05em;font-size:.76rem;color:var(--text-2)}
+  th:first-child,td:first-child{text-align:left}
+  td b{font-variant-numeric:tabular-nums}
+  .lepsie{color:var(--ok)} .horsie{color:var(--kolona)} .rovnako{color:var(--text-2)}
+
+  footer{margin-top:44px;padding-top:18px;border-top:1px dashed var(--asfalt-3);
+    font-size:.8rem;color:var(--text-2);line-height:1.7}
+  .chyba{background:#3A2224;border:1px solid #5C2E31;color:#F0B9B6;border-radius:var(--radius);
+    padding:14px 16px;margin:14px 0;font-size:.9rem;display:none}
+  @media (max-width:640px){ .k-cas b{font-size:2.1rem} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="hlava-vrch">
+      <div class="eyebrow">Kostolianska cesta × Cesta pod Hradovou × Vodárenská · porovnanie s meraním pred prestavbou</div>
+      <div class="hodiny"><b id="hodiny-cas">—</b><span id="hodiny-datum"></span></div>
+    </div>
+    <h1>Kruhový objazd</h1>
+    <div class="stav-riadok">
+      <span class="pulz"><i></i><span id="posledne">Načítavam…</span></span>
+    </div>
+  </header>
+
+  <div class="chyba" id="chyba">Dáta sa nepodarilo načítať.</div>
+
+  <div class="karty" id="karty"></div>
+
+  <section>
+    <div class="sekcia-hlava">
+      <h2>Priebeh dňa</h2>
+      <span class="podnadpis">dnes proti decembru 2024</span>
+      <select id="vyber-graf"></select>
+    </div>
+    <div class="panel" id="graf-panel"><div class="prazdne">Načítavam…</div></div>
+    <div class="legenda">
+      <span><i style="background:#E8E4D8"></i> dnes</span>
+      <span><i style="background:#8A93A0"></i> december 2024 (priemer)</span>
+      <span><i style="background:#3A3F49;height:6px"></i> voľný prejazd</span>
+    </div>
+  </section>
+
+  <section>
+    <div class="sekcia-hlava">
+      <h2>Úspora podľa hodiny</h2>
+      <span class="podnadpis">koľko sekúnd sa ušetrí oproti roku 2024</span>
+      <select id="vyber-bar"></select>
+    </div>
+    <div class="panel" id="bar-panel"><div class="prazdne">Načítavam…</div></div>
+  </section>
+
+  <section>
+    <div class="sekcia-hlava"><h2>Súhrn všetkých smerov</h2></div>
+    <div class="panel" id="tabulka-panel"><div class="prazdne">Načítavam…</div></div>
+  </section>
+
+  <footer>Zdroj: TomTom Routing API · základ 2024: Google Distance Matrix</footer>
+</div>
+
+<script>
+(() => {
+  const REPO = "dzupka-hub/Kosice-kruhovy-objazd";
+  const RAW  = `https://raw.githubusercontent.com/${REPO}/main/data/`;
+  const TZ   = "Europe/Bratislava";
+
+  // ---- zaklad z merania 12/2024 (Google Distance Matrix, pracovne dni) ----
+  const ZAKLAD = {"obdobie":"16.–22. december 2024","zdroj":"Google Distance Matrix","smery":{"AB":{"nazov":"Kostoľany → Centrum","dlzka":508,"volny":61,"priemer":89.6,"max":180,"n":250,"hodiny":{"5":48.2,"6":86.4,"7":137.8,"8":128.4,"9":76.4,"15":91.3,"16":98.0,"17":74.6,"18":59.8,"19":55.0}},"BA":{"nazov":"Centrum → Kostoľany","dlzka":508,"volny":52,"priemer":54.5,"max":68,"n":250,"hodiny":{"5":46.9,"6":50.5,"7":59.3,"8":55.8,"9":52.8,"15":59.7,"16":57.4,"17":54.7,"18":52.4,"19":51.0}},"AC":{"nazov":"Kostoľany → pod Hradovou","dlzka":583,"volny":64,"priemer":91.0,"max":179,"n":250,"hodiny":{"5":50.6,"6":87.0,"7":138.4,"8":128.3,"9":77.6,"15":92.1,"16":99.5,"17":76.9,"18":62.7,"19":57.8}},"CA":{"nazov":"pod Hradovou → Kostoľany","dlzka":583,"volny":50,"priemer":52.1,"max":71,"n":250,"hodiny":{"5":46.8,"6":50.5,"7":62.2,"8":54.4,"9":49.4,"15":52.2,"16":51.1,"17":50.7,"18":49.9,"19":49.8}},"AD":{"nazov":"Kostoľany → Vodárenská","dlzka":813,"volny":117,"priemer":147.6,"max":240,"n":250,"hodiny":{"5":104.3,"6":133.4,"7":198.0,"8":180.6,"9":141.6,"15":151.7,"16":159.7,"17":143.8,"18":116.2,"19":112.2}},"DA":{"nazov":"Vodárenská → Kostoľany","dlzka":813,"volny":96,"priemer":98.9,"max":117,"n":250,"hodiny":{"5":90.4,"6":95.7,"7":108.1,"8":100.6,"9":96.0,"15":101.5,"16":100.3,"17":98.4,"18":97.0,"19":96.0}}}};
+
+  const SMERY = Object.keys(ZAKLAD.smery);
+  let vsetky = [], vybGraf = "AD", vybBar = "AD";
+  const $ = s => document.querySelector(s);
+
+  const fmtCas = new Intl.DateTimeFormat("sk-SK",{timeZone:TZ,hour:"2-digit",minute:"2-digit"});
+  const casti = d => {
+    const p = new Intl.DateTimeFormat("en-GB",{timeZone:TZ,year:"numeric",month:"2-digit",
+      day:"2-digit",hour:"2-digit",minute:"2-digit",weekday:"short",hour12:false})
+      .formatToParts(d).reduce((a,x)=>(a[x.type]=x.value,a),{});
+    return { den:`${p.year}-${p.month}-${p.day}`, hodina:+p.hour,
+             minuty:+p.hour*60 + +p.minute,
+             pracovny:["Sat","Sun"].indexOf(p.weekday) === -1 };
+  };
+  const rec = (m,id) => (m && m[id] && !m[id].error) ? m[id] : null;
+  const s1 = v => v.toFixed(0);
+
+  // ------------------------- karty -------------------------
+  function vykresliKarty(z){
+    $("#posledne").textContent = z
+      ? `posledné meranie ${fmtCas.format(new Date(z.t))}`
+      : "zatiaľ žiadne merania";
+    const h = z ? casti(new Date(z.t)).hodina : null;
+    const box = $("#karty");
+    box.innerHTML = SMERY.map(id => {
+      const zk = ZAKLAD.smery[id];
+      const r = rec(z, id);
+      const zaklad2024 = h != null ? zk.hodiny[String(h)] : null;
+      const hlavna = id === "AD" ? " hlavna" : "";
+
+      if (!r) return `<div class="karta${hlavna}">
+        <div class="k-nazov">${zk.nazov}</div>
+        <div class="k-cas"><b>—</b><span>s</span></div>
+        <div class="k-porov">bez dát</div>
+        <div class="k-detail">2024 priemer ${zk.priemer} s</div></div>`;
+
+      let porov = `<span class="rovnako">2024 v tomto čase nemeraný</span>`;
+      if (zaklad2024 != null){
+        const d = zaklad2024 - r.cas;
+        const trieda = d > 3 ? "lepsie" : d < -3 ? "horsie" : "rovnako";
+        const sip = d > 3 ? "▼" : d < -3 ? "▲" : "▬";
+        const txt = Math.abs(d) <= 3 ? "rovnako ako 2024"
+          : d > 0 ? `o ${s1(d)} s rýchlejšie než 2024`
+                  : `o ${s1(-d)} s pomalšie než 2024`;
+        porov = `<span class="${trieda}"><span class="sipka">${sip}</span> ${txt}</span>`;
+      }
+      return `<div class="karta${hlavna}">
+        <div class="k-nazov">${zk.nazov}</div>
+        <div class="k-cas"><b>${r.cas}</b><span>s</span></div>
+        <div class="k-porov">${porov}</div>
+        <div class="k-detail">voľný prejazd ${r.volny} s · 2024 v tomto čase ${
+          zaklad2024 != null ? zaklad2024 + " s" : "—"}</div></div>`;
+    }).join("");
+  }
+
+  // ------------------------- graf dna -------------------------
+  function vykresliGraf(){
+    const panel = $("#graf-panel");
+    const zk = ZAKLAD.smery[vybGraf];
+    const dnes = casti(new Date()).den;
+    const body = [];
+    let volny = zk.volny;
+    for (const m of vsetky){
+      if (casti(new Date(m.t)).den !== dnes) continue;
+      const r = rec(m, vybGraf);
+      if (r){ body.push({x: casti(new Date(m.t)).minuty, y: r.cas}); volny = r.volny; }
+    }
+    const zakladBody = Object.entries(zk.hodiny)
+      .map(([h,v]) => ({x: +h*60 + 30, y: v})).sort((a,b)=>a.x-b.x);
+
+    let maxY = Math.max(zk.max, volny, ...body.map(p=>p.y), 60);
+    const W=940,H=280,L=44,R=14,T=18,B=34;
+    const x0=4.5*60, x1=20*60;
+    const X = v => L + (v-x0)/(x1-x0)*(W-L-R);
+    const Y = v => T + (1 - v/(maxY*1.1))*(H-T-B);
+
+    let s = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block">`;
+    s += `<line x1="${L}" y1="${Y(volny)}" x2="${W-R}" y2="${Y(volny)}"
+      stroke="#3A3F49" stroke-width="6" stroke-linecap="round" opacity=".6"/>`;
+    for (let h=5;h<=20;h+=2){
+      s += `<line x1="${X(h*60)}" y1="${T}" x2="${X(h*60)}" y2="${H-B}" stroke="#242830"/>
+            <text x="${X(h*60)}" y="${H-12}" fill="#9AA2AD" font-size="12" text-anchor="middle">${h}</text>`;
+    }
+    for (const yv of [Math.round(maxY/2), Math.round(maxY)])
+      s += `<text x="${L-8}" y="${Y(yv)+4}" fill="#9AA2AD" font-size="12" text-anchor="end">${yv}</text>`;
+
+    // zaklad 2024 - dve oddelene casti (rano, poobede)
+    for (const usek of [zakladBody.filter(p=>p.x<12*60), zakladBody.filter(p=>p.x>=12*60)]){
+      if (usek.length < 2) continue;
+      const d = usek.map((p,i)=>(i?"L":"M")+X(p.x).toFixed(1)+" "+Y(p.y).toFixed(1)).join(" ");
+      s += `<path d="${d}" fill="none" stroke="#8A93A0" stroke-width="2.5"
+             stroke-dasharray="7 5" stroke-linejoin="round"/>`;
+      for (const p of usek)
+        s += `<circle cx="${X(p.x)}" cy="${Y(p.y)}" r="3.5" fill="#8A93A0">
+                <title>2024, ${Math.floor(p.x/60)}:00 · ${p.y} s</title></circle>`;
+    }
+    // dnes
+    if (body.length){
+      body.sort((a,b)=>a.x-b.x);
+      const d = body.map((p,i)=>(i?"L":"M")+X(p.x).toFixed(1)+" "+Y(p.y).toFixed(1)).join(" ");
+      s += `<path d="${d}" fill="none" stroke="#E8E4D8" stroke-width="2.5"
+             stroke-linejoin="round" stroke-linecap="round"/>`;
+      for (const p of body)
+        s += `<circle cx="${X(p.x)}" cy="${Y(p.y)}" r="3" fill="#E8E4D8">
+                <title>${Math.floor(p.x/60)}:${String(p.x%60).padStart(2,"0")} · ${p.y} s</title></circle>`;
+    } else {
+      s += `<text x="${(L+W)/2}" y="${H/2}" fill="#9AA2AD" font-size="13" text-anchor="middle">dnes zatiaľ bez meraní</text>`;
+    }
+    s += `<text x="${L}" y="${T-4}" fill="#9AA2AD" font-size="11">sekundy</text></svg>`;
+    panel.innerHTML = s;
+  }
+
+  // ------------------------- stlpce uspory -------------------------
+  function vykresliBar(){
+    const panel = $("#bar-panel");
+    const zk = ZAKLAD.smery[vybBar];
+    // priemer teraz podla hodiny (len pracovne dni)
+    const agg = {};
+    for (const m of vsetky){
+      const c = casti(new Date(m.t));
+      if (!c.pracovny) continue;
+      const r = rec(m, vybBar);
+      if (!r) continue;
+      (agg[c.hodina] ??= {sum:0,n:0});
+      agg[c.hodina].sum += r.cas; agg[c.hodina].n++;
+    }
+    const hodiny = Object.keys(zk.hodiny).map(Number).sort((a,b)=>a-b);
+    const data = hodiny.map(h => ({
+      h, stare: zk.hodiny[String(h)],
+      nove: agg[h] ? agg[h].sum/agg[h].n : null,
+      n: agg[h]?.n || 0,
+    }));
+    if (!data.some(d=>d.nove!=null)){
+      panel.innerHTML = `<div class="prazdne">Porovnanie sa vykreslí, keď pribudnú merania v hodinách 5–9 a 15–19.</div>`;
+      return;
+    }
+    const maxY = Math.max(...data.map(d=>Math.max(d.stare, d.nove||0)))*1.15;
+    const W=940,H=290,L=44,R=14,T=18,B=44;
+    const bw = (W-L-R)/data.length;
+    const Y = v => T + (1 - v/maxY)*(H-T-B);
+
+    let s = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block">`;
+    data.forEach((d,i)=>{
+      const x = L + i*bw;
+      const w = bw*0.34;
+      s += `<rect x="${x+bw*0.12}" y="${Y(d.stare)}" width="${w}" height="${H-B-Y(d.stare)}"
+             rx="3" fill="#8A93A0" opacity=".75"><title>2024, ${d.h}:00 · ${d.stare} s</title></rect>`;
+      if (d.nove != null){
+        const lepsie = d.nove < d.stare;
+        s += `<rect x="${x+bw*0.52}" y="${Y(d.nove)}" width="${w}" height="${H-B-Y(d.nove)}"
+               rx="3" fill="${lepsie ? "#46C06A" : "#E5544D"}">
+               <title>teraz, ${d.h}:00 · ${d.nove.toFixed(0)} s (${d.n} meraní)</title></rect>`;
+        const rozdiel = d.stare - d.nove;
+        if (Math.abs(rozdiel) >= 3)
+          s += `<text x="${x+bw/2}" y="${Math.min(Y(d.nove),Y(d.stare))-6}" font-size="11"
+                 text-anchor="middle" fill="${lepsie ? "#46C06A" : "#E5544D"}">${
+                 rozdiel>0?"−":"+"}${Math.abs(rozdiel).toFixed(0)}s</text>`;
+      }
+      s += `<text x="${x+bw/2}" y="${H-24}" fill="#9AA2AD" font-size="12" text-anchor="middle">${d.h}:00</text>`;
+    });
+    s += `<line x1="${L}" y1="${H-B}" x2="${W-R}" y2="${H-B}" stroke="#3A3F49"/>`;
+    s += `<text x="${L}" y="${T-4}" fill="#9AA2AD" font-size="11">sekundy</text></svg>`;
+    panel.innerHTML = s;
+  }
+
+  // ------------------------- tabulka -------------------------
+  function vykresliTabulku(){
+    const panel = $("#tabulka-panel");
+    let riadky = "", spolu = {stare:0, nove:0, n:0};
+    for (const id of SMERY){
+      const zk = ZAKLAD.smery[id];
+      // porovnavame len hodiny, ktore boli merane aj v 2024, pracovne dni
+      let sumN = 0, nN = 0, sumS = 0;
+      for (const m of vsetky){
+        const c = casti(new Date(m.t));
+        if (!c.pracovny) continue;
+        const zaklad = zk.hodiny[String(c.hodina)];
+        if (zaklad == null) continue;
+        const r = rec(m, id);
+        if (!r) continue;
+        sumN += r.cas; nN++; sumS += zaklad;
+      }
+      const nove = nN ? sumN/nN : null;
+      const stare = nN ? sumS/nN : zk.priemer;
+      const d = nove != null ? stare - nove : null;
+      const trieda = d == null ? "rovnako" : d > 3 ? "lepsie" : d < -3 ? "horsie" : "rovnako";
+      if (nove != null){ spolu.stare += sumS; spolu.nove += sumN; spolu.n += nN; }
+      riadky += `<tr>
+        <td>${zk.nazov}</td>
+        <td>${zk.dlzka} m</td>
+        <td>${stare.toFixed(0)} s</td>
+        <td><b>${nove != null ? nove.toFixed(0)+" s" : "—"}</b></td>
+        <td class="${trieda}"><b>${d != null ? (d>0?"−":"+")+Math.abs(d).toFixed(0)+" s" : "—"}</b></td>
+        <td class="${trieda}">${d != null ? ((d/stare)*100).toFixed(0)+" %" : "—"}</td>
+        <td>${nN || "—"}</td></tr>`;
+    }
+    let sumar = "";
+    if (spolu.n){
+      const d = (spolu.stare - spolu.nove)/spolu.n;
+      const trieda = d > 3 ? "lepsie" : d < -3 ? "horsie" : "rovnako";
+      sumar = `<tr style="border-top:2px solid var(--asfalt-3)">
+        <td><b>Priemer za všetky smery</b></td><td></td>
+        <td>${(spolu.stare/spolu.n).toFixed(0)} s</td>
+        <td><b>${(spolu.nove/spolu.n).toFixed(0)} s</b></td>
+        <td class="${trieda}"><b>${d>0?"−":"+"}${Math.abs(d).toFixed(0)} s</b></td>
+        <td class="${trieda}">${((d/(spolu.stare/spolu.n))*100).toFixed(0)} %</td>
+        <td>${spolu.n}</td></tr>`;
+    }
+    panel.innerHTML = `<table>
+      <tr><th>Smer</th><th>Dĺžka</th><th>2024</th><th>Teraz</th><th>Rozdiel</th><th>%</th><th>Meraní</th></tr>
+      ${riadky}${sumar}</table>
+      <p style="font-size:.78rem;color:var(--text-2);margin-top:12px;line-height:1.6">
+      Porovnávajú sa len pracovné dni a hodiny, ktoré boli merané aj v roku 2024 (5–9 a 15–19).
+      Základ: ${ZAKLAD.obdobie}, ${ZAKLAD.zdroj}. Záporný rozdiel znamená úsporu času.</p>`;
+  }
+
+  // ------------------------- nacitanie -------------------------
+  async function nacitajJSON(subor){
+    for (const url of ["data/" + subor, RAW + subor]){
+      try{
+        const r = await fetch(url + "?v=" + Date.now(), {cache:"no-store"});
+        if (r.ok) return await r.json();
+      }catch(e){}
+    }
+    throw new Error("nedostupne");
+  }
+  function mesiaceDozadu(n){
+    const out = [], d = new Date();
+    for (let i=0;i<n;i++){
+      const p = new Intl.DateTimeFormat("en-GB",{timeZone:TZ,year:"numeric",month:"2-digit"})
+        .formatToParts(d).reduce((a,x)=>(a[x.type]=x.value,a),{});
+      out.push(`${p.year}-${p.month}`);
+      d.setUTCDate(0);
+    }
+    return out;
+  }
+  async function nacitaj(){
+    $("#chyba").style.display = "none";
+    try{
+      const latest = await nacitajJSON("latest.json").catch(()=>null);
+      const casti2 = await Promise.all(
+        mesiaceDozadu(6).map(m => nacitajJSON(m + ".json").catch(()=>[]))
+      );
+      vsetky = casti2.flat().sort((a,b)=> new Date(a.t)-new Date(b.t));
+      vykresliKarty(latest || vsetky[vsetky.length-1] || null);
+      vykresliGraf(); vykresliBar(); vykresliTabulku();
+    }catch(e){ $("#chyba").style.display = "block"; }
+  }
+
+  // ------------------------- ovladanie -------------------------
+  const moznosti = SMERY.map(id =>
+    `<option value="${id}">${ZAKLAD.smery[id].nazov}</option>`).join("");
+  $("#vyber-graf").innerHTML = moznosti; $("#vyber-graf").value = vybGraf;
+  $("#vyber-bar").innerHTML = moznosti;  $("#vyber-bar").value = vybBar;
+  $("#vyber-graf").addEventListener("change", e => { vybGraf = e.target.value; vykresliGraf(); });
+  $("#vyber-bar").addEventListener("change",  e => { vybBar  = e.target.value; vykresliBar(); });
+
+  function tikni(){
+    const t = new Date();
+    $("#hodiny-cas").textContent = fmtCas.format(t);
+    $("#hodiny-datum").textContent = new Intl.DateTimeFormat("sk-SK",
+      {timeZone:TZ, weekday:"long", day:"numeric", month:"long", year:"numeric"}).format(t);
+  }
+  tikni(); setInterval(tikni, 20*1000);
+  nacitaj(); setInterval(nacitaj, 10*60*1000);
+})();
+</script>
+</body>
+</html>
