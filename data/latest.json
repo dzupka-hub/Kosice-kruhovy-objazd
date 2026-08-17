@@ -1,5 +1,5 @@
 {
-  "t": "2026-08-17T14:24:50.201Z",
+  "t": "2026-08-17T14:34:54.281Z",
   "AB": {
     "cas": 80,
     "volny": 42,
@@ -17,7 +17,7 @@
   "AC": {
     "cas": 95,
     "volny": 58,
-    "obvykly": 94,
+    "obvykly": 95,
     "zdrzanie": 0,
     "dlzka": 578
   },
@@ -36,9 +36,9 @@
     "dlzka": 815
   },
   "DA": {
-    "cas": 152,
+    "cas": 153,
     "volny": 135,
-    "obvykly": 150,
+    "obvykly": 152,
     "zdrzanie": 0,
     "dlzka": 815
   }
