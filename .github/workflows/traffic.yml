@@ -1,0 +1,75 @@
+# Merania prejazdu krizovatkou Kostolianska (kruhovy objazd).
+#
+# Husto sa meria len v hodinach, ktore boli merane aj v 12/2024
+# (miestne 5-9 a 15-19), aby bolo porovnanie priame.
+# Mimo nich staci jedno meranie za hodinu pre kontext.
+#
+# Spotreba: 6 requestov na meranie.
+#   spicka:  10 hodin x 6 vzoriek x 6 = 360
+#   kontext:  7 hodin x 1 vzorka x 6 =  42
+#   spolu cca 400 requestov/pracovny den, ~8 800 mesacne
+#   (limit Routing API = 20 000 mesacne, delene so Slaneckou)
+
+name: Meranie krizovatka Kostolianska
+
+on:
+  schedule:
+    - cron: "0 3-19 * * 1-5"     # pracovne dni, kazdu hodinu (UTC)
+    - cron: "0 6-16/4 * * 0,6"   # vikend, kontrolne merania
+  workflow_dispatch:
+    inputs:
+      vzorky:
+        description: "Pocet merani v tomto behu"
+        default: "1"
+
+permissions:
+  contents: write
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Meraj a zapisuj
+        env:
+          TOMTOM_API_KEY: ${{ secrets.TOMTOM_API_KEY }}
+          RUCNE: ${{ github.event.inputs.vzorky }}
+        run: |
+          set -u
+          git config user.name "traffic-bot"
+          git config user.email "actions@github.com"
+
+          H=$(date -u +%-H)   # hodina UTC (miestny cas = UTC+2 v lete)
+          D=$(date -u +%u)    # 1=Po ... 7=Ne
+
+          if [ -n "${RUCNE:-}" ]; then
+            VZORKY="$RUCNE"
+          elif [ "$D" -le 5 ] && { [ "$H" -ge 3 ] && [ "$H" -le 7 ] || [ "$H" -ge 13 ] && [ "$H" -le 17 ]; }; then
+            VZORKY=6          # hodiny porovnatelne s 2024
+          else
+            VZORKY=1
+          fi
+
+          echo "Hodina ${H} UTC, den ${D} -> ${VZORKY} vzoriek"
+
+          for i in $(seq 1 "$VZORKY"); do
+            echo "--- vzorka ${i}/${VZORKY} ---"
+            node collect.js || echo "meranie zlyhalo, pokracujem"
+
+            git add data/
+            if ! git diff --cached --quiet; then
+              git commit -m "meranie $(date -u +'%Y-%m-%d %H:%M') UTC"
+              for pokus in 1 2 3; do
+                git push && break
+                git pull --rebase --autostash
+              done
+            fi
+
+            if [ "$i" -lt "$VZORKY" ]; then sleep 600; fi
+          done
