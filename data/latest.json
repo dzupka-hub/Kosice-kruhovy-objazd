@@ -1,44 +1,44 @@
 {
-  "t": "2026-08-19T19:23:03.985Z",
+  "t": "2026-08-20T03:44:24.907Z",
   "AB": {
-    "cas": 45,
+    "cas": 48,
     "volny": 42,
-    "obvykly": 44,
+    "obvykly": 49,
     "zdrzanie": 0,
     "dlzka": 491
   },
   "BA": {
-    "cas": 43,
+    "cas": 40,
     "volny": 40,
-    "obvykly": 42,
+    "obvykly": 41,
     "zdrzanie": 0,
     "dlzka": 491
   },
   "AC": {
-    "cas": 61,
+    "cas": 63,
     "volny": 58,
-    "obvykly": 60,
+    "obvykly": 64,
     "zdrzanie": 0,
     "dlzka": 578
   },
   "CA": {
-    "cas": 58,
+    "cas": 55,
     "volny": 56,
     "obvykly": 57,
     "zdrzanie": 0,
     "dlzka": 578
   },
   "AD": {
-    "cas": 150,
+    "cas": 149,
     "volny": 145,
-    "obvykly": 148,
+    "obvykly": 152,
     "zdrzanie": 0,
     "dlzka": 815
   },
   "DA": {
-    "cas": 138,
+    "cas": 134,
     "volny": 135,
-    "obvykly": 136,
+    "obvykly": 137,
     "zdrzanie": 0,
     "dlzka": 815
   }
