@@ -1,7 +1,7 @@
 {
-  "t": "2026-10-07T17:55:31.766Z",
+  "t": "2026-10-07T18:05:36.255Z",
   "AB": {
-    "cas": 55,
+    "cas": 54,
     "volny": 48,
     "obvykly": 55,
     "zdrzanie": 0,
@@ -10,7 +10,7 @@
   "BA": {
     "cas": 50,
     "volny": 48,
-    "obvykly": 51,
+    "obvykly": 50,
     "zdrzanie": 0,
     "dlzka": 506
   },
