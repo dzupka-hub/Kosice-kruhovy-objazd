@@ -1,9 +1,9 @@
 {
-  "t": "2026-10-13T17:56:12.467Z",
+  "t": "2026-10-13T18:06:16.843Z",
   "AB": {
     "cas": 54,
     "volny": 49,
-    "obvykly": 55,
+    "obvykly": 54,
     "zdrzanie": 0,
     "dlzka": 500
   },
@@ -15,7 +15,7 @@
     "dlzka": 506
   },
   "AC": {
-    "cas": 59,
+    "cas": 58,
     "volny": 53,
     "obvykly": 59,
     "zdrzanie": 0,
