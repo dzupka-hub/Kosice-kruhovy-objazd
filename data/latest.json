@@ -1,7 +1,7 @@
 {
-  "t": "2026-10-16T17:48:10.007Z",
+  "t": "2026-10-16T17:58:16.255Z",
   "AB": {
-    "cas": 55,
+    "cas": 54,
     "volny": 49,
     "obvykly": 55,
     "zdrzanie": 0,
@@ -17,7 +17,7 @@
   "AC": {
     "cas": 59,
     "volny": 53,
-    "obvykly": 60,
+    "obvykly": 59,
     "zdrzanie": 0,
     "dlzka": 568
   },
@@ -29,9 +29,9 @@
     "dlzka": 604
   },
   "AD": {
-    "cas": 148,
+    "cas": 147,
     "volny": 141,
-    "obvykly": 149,
+    "obvykly": 148,
     "zdrzanie": 0,
     "dlzka": 830
   },
